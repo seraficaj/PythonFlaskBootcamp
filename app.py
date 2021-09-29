@@ -5,9 +5,11 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    puppies = ['Floofy', 'Rhubarb', 'Sparky']
-    return render_template("basic.html", puppies=puppies)
+    return render_template("home.html")
 
+@app.route("/puppy/<name>")
+def pup_name(name):
+    return render_template("puppy.html", name=name)
 
 if __name__ == "__main__":
     app.run(debug=True)
