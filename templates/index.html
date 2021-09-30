@@ -1,0 +1,16 @@
+{% extends "base.html"%} {% block content %}
+<!-- Bootstrap 5 has no Jumbotron element -->
+<style type="text/css">
+    .jumbotron {
+      padding: 4rem 2rem;
+      margin-bottom: 2rem;
+      background-color: var(--bs-light);
+      border-radius: .3rem;  
+    }
+</style>
+<div class="jumbotron">
+  <p>Welcome to Puppy Rock!</p>
+  <p>Wanna sign up for our puppy band?</p>
+  <a href="{{url_for('signup_form')}}">Sign up for auditions here</a>
+</div>
+{% endblock %}
