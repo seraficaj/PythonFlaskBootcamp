@@ -1,14 +1,14 @@
-{% extends "base.html"%} {% block content %}
-<!-- Bootstrap 5 has no Jumbotron element -->
-<style type="text/css">
-    .jumbotron {
-      padding: 4rem 2rem;
-      margin-bottom: 2rem;
-      background-color: var(--bs-light);
-      border-radius: .3rem;  
-    }
-</style>
-<div class="jumbotron">
-  <a href="{{url_for('signup_form')}}">Sign up for usernames here</a>
-</div>
-{% endblock %}
+<p>
+  {% if breed %}
+  The breed you entered is {{breed}}.
+  Update it in the form below:
+  {% else %}
+  Please enter your breed:
+  {% endif %}
+
+  <form method="POST">
+  {{ form.hidden_tag() }}
+  {{ form.breed.label }}{{ form.breed() }}
+  {{ form.submit() }}
+  </form>
+</p>
