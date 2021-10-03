@@ -1,30 +1,32 @@
-from flask import Flask, render_template, session, redirect, url_for, flash
-from flask_wtf import FlaskForm
-from wtforms import (
-    StringField,
-    SubmitField,
-)
+import os
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+
+basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
 
-app.config["SECRET_KEY"] = "mysecretkey"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(
+    basedir, "data.sqlite"
+)
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+db = SQLAlchemy(app)
 
 
-class SimpleForm(FlaskForm):
-    breed = StringField('Puppy Breed')
-    submit = SubmitField('Click me')
+class Puppy(db.Model):
+    __tablename__ = "puppies"
 
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.Text)
+    age = db.Column(db.Integer)
 
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    # Create instance of the form.
-    form = SimpleForm()
-    # If the form is valid on submission (we'll talk about validation next)
-    if form.validate_on_submit():
-        flash('You just clicked the button!')
-        return redirect(url_for("index"))
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
 
-    return render_template('index.html', form=form)
+    def __repr__(self):
+        return f"Puppy {self.name} is {self.age} year/s old"
 
 
 if __name__ == "__main__":
