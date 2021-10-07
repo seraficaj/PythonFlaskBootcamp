@@ -57,7 +57,7 @@ def add_pup():
     return render_template('add.html', form=form)
 
 
-@app.route('list')
+@app.route('/list')
 def list_puppies():
     puppies = Puppy.query.all()
     return render_template('list.html', puppies=puppies)
