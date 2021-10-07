@@ -1,6 +1,6 @@
 import os
 
-from forms import AddForm, DelForm
+from forms import AddForm, AddOwnerForm, DelForm
 
 from flask import Flask, render_template, url_for, redirect
 from flask_sqlalchemy import SQLAlchemy
@@ -24,46 +24,87 @@ Migrate(app, db)
 
 ## MODELS
 
+
 class Puppy(db.Model):
-    __tablename__ = 'puppies'
+    __tablename__ = "puppies"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Text)
+    owner = db.relationship('Owner',backref='puppy',uselist=False)
 
-    def __init__(self,name):
+    def __init__(self, name):
         self.name = name
 
     def __repr__(self):
-        return f'Puppy name: {self.name}'
+        if self.owner:
+            return f"Puppy name is {self.name} and owner is {self.owner.name}"
+        else:
+            return f"Puppy name is {self.name} and has no owner assigned yet."
 
 
-## VIEW FUNCS 
+class Owner(db.Model):
 
-@app.route('/')
+    __tablename__ = "owners"
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.Text)
+    # We use puppies.id because __tablename__='puppies'
+    puppy_id = db.Column(db.Integer, db.ForeignKey("puppies.id"))
+
+    def __init__(self, name, puppy_id):
+        self.name = name
+        self.puppy_id = puppy_id
+
+    def __repr__(self):
+        return f"Owner's Name: {self.name}"
+
+
+## VIEW FUNCS
+
+
+@app.route("/")
 def index():
-    return render_template('home.html')
+    return render_template("home.html")
 
 
-@app.route('/add', methods=['GET', 'POST'])
+@app.route("/add", methods=["GET", "POST"])
 def add_pup():
     form = AddForm()
-    
+
     if form.validate_on_submit():
         name = form.name.data
         new_puppy = Puppy(name)
         db.session.add(new_puppy)
         db.session.commit()
-        
-        return redirect(url_for('list_puppies'))
-    return render_template('add.html', form=form)
+
+        return redirect(url_for("list_puppies"))
+    return render_template("add.html", form=form)
 
 
-@app.route('/list')
+@app.route("/add_owner", methods=["GET", "POST"])
+def add_owner():
+
+    form = AddOwnerForm()
+
+    if form.validate_on_submit():
+        name = form.name.data
+        pup_id = form.pup_id.data
+        # Add new owner to database
+        new_owner = Owner(name, pup_id)
+        db.session.add(new_owner)
+        db.session.commit()
+
+        return redirect(url_for("list_puppies"))
+
+    return render_template("add_owner.html", form=form)
+
+
+@app.route("/list")
 def list_puppies():
     puppies = Puppy.query.all()
-    return render_template('list.html', puppies=puppies)
+    return render_template("list.html", puppies=puppies)
 
 
-@app.route('/delete', methods=['GET', 'POST'])
+@app.route("/delete", methods=["GET", "POST"])
 def del_pup():
     form = DelForm()
     if form.validate_on_submit():
@@ -72,8 +113,9 @@ def del_pup():
         db.session.delete(pup)
         db.session.commit()
 
-        return redirect(url_for('list_puppies'))
-    return render_template('delete.html', form=form)
+        return redirect(url_for("list_puppies"))
+    return render_template("delete.html", form=form)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     app.run(debug=True)
