@@ -26,9 +26,13 @@
     <title></title>
   </head>
   <body>
-    {% for m in get_flashed_messages() %} {‌{m}}<br />
-
-    {% endfor %}
+    {% with messages = get_flashed_messages() %} {% if messages %}
+    <ul class="flashes">
+      {% for message in messages %}
+      <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %} {% endwith %}
     <ul class="nav">
       <li class="nav-item">
         <a class="nav-link" href="{{ url_for('home') }}">Home</a>
