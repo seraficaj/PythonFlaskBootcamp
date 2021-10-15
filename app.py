@@ -31,14 +31,14 @@ def login():
     if form.validate_on_submit():
         # Grab the user from our User Models table
         user = User.query.filter_by(email=form.email.data).first()
-        
+        print(user)
         # Check that the user was supplied and the password is right
         # The verify_password method comes from the User object
         # https://stackoverflow.com/questions/2209755/python-operation-vs-is-not
 
-        if user.check_password(form.password.data) and user is not None:
+        if user is not None and user.check_password(form.password.data):
             #Log in the user
-            print(user)
+
             login_user(user)
             flash('Logged in successfully.')
 
