@@ -6,3 +6,5 @@
 - flask db init
 - flask db migrate
 - flask db upgrade
+
+## 103. 104. See FlaskDance docs for updates to Oauth
