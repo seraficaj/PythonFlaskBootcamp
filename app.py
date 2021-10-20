@@ -43,3 +43,7 @@ def login():
     email = resp.json()['email']
 
     return render_template('welcome.html', email=email)
+
+
+if __name__ == '__main__':
+    app.run()
