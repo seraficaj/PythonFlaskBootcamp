@@ -5,7 +5,7 @@ from datetime import datetime
 
 
 @login_manager.user_loader
-def load_user(user.id):
+def load_user(user_id):
     return User.query.get(user_id)
 
 
@@ -38,9 +38,9 @@ class BlogPost(db.Model):
     users = db.relationship(User)
     
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeighKey('users.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
-    date = db.Column(db.Datetime, nullable=False, default=datetime.utcnow)
+    date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     title = db.Column(db.String(120), nullable=False)
     text = db.Column(db.Text, nullable=False)
 
