@@ -27,6 +27,13 @@
     <title></title>
   </head>
   <body>
+    {% with messages = get_flashed_messages() %} {% if messages %}
+    <ul class="flashes">
+      {% for message in messages %}
+      <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %} {% endwith %}
     <ul class="nav">
       <li class="nav-link">
         <a href="{{url_for('core.index')}}">Home</a>
