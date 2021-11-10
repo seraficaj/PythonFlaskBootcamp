@@ -1,0 +1,4 @@
+myvenv
+data.sqlite
+migrations
+.vscode
