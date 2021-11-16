@@ -3,6 +3,7 @@
 ## Set Up 
 - start Python3 virtual environment
 - pip3 install -r requirements.txt
+- export flask_app=app
 - flask db init
 - flask db migrate
 - flask db upgrade
